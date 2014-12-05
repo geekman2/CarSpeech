@@ -9,20 +9,25 @@
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 from dragonfly.all import CompoundRule, Grammar, Key
+import win32com.client
+import win32gui
 import natlink
 import time
 import vlc
 import os
 import random
 
-musdir = "C:/Users/Geekman2/Dropbox/Tessa and Devon/__Devon/"
-ins = vlc.Instance()
-player = ins.media_player_new()
+musdir = r"C:/Users/Geekman2/Dropbox/Tessa and Devon/__Devon/"
+wmp = win32com.client.dynamic.Dispatch("WMPlayer.OCX")
+wmp.settings.autoStart = True
+wmp.settings.volume = 50
+
 playlist = os.listdir(musdir)
 def addSong(file):
-    media = ins.media_new(unicode(file))
-    player.set_media(media)
-    player.play()
+    wmp.URL = file
+    while wmp.Playstate != 1:
+        win32gui.PumpWaitingMessages()
+        time.sleep(0.1)
 
 
 class ExampleRule(CompoundRule):
